@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="AeroSync is a student-founded native iOS aviation coordination app connecting real-time airport conditions, passenger communication, and aviation policy.">
+  <meta name="theme-color" content="#041a33">
+  <meta property="og:title" content="AeroSync | Aviation coordination, built around people">
+  <meta property="og:description" content="A native iOS prototype for flight connections, airport pickups, live conditions, and passenger-centered aviation policy.">
+  <meta property="og:image" content="assets/aerosync-logo.png">
+  <title>AeroSync | Aviation Coordination</title>
+  <link rel="icon" href="assets/aerosync-icon.png">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header">
+    <a class="brand" href="#top" aria-label="AeroSync home">
+      <img src="assets/aerosync-icon.png" alt="">
+      <span>AeroSync</span>
+    </a>
+    <button class="menu-button" type="button" aria-expanded="false" aria-controls="site-nav">
+      <span class="menu-line"></span>
+      <span class="menu-line"></span>
+      <span class="menu-line"></span>
+      <span class="sr-only">Open navigation</span>
+    </button>
+    <nav id="site-nav" aria-label="Primary navigation">
+      <a href="#product">Product</a>
+      <a href="#data">Live data</a>
+      <a href="#policy">Policy</a>
+      <a href="#founder">Founder</a>
+    </nav>
+  </header>
+
+  <main id="main">
+    <section class="hero" id="top">
+      <img class="hero-mark" src="assets/aerosync-logo.png" alt="">
+      <div class="hero-copy">
+        <p class="eyebrow">Student-founded aviation technology venture</p>
+        <h1>AeroSync</h1>
+        <p class="hero-lede">Aviation coordination, built around people.</p>
+        <p class="hero-detail">A native iOS app that helps travelers evaluate connections, coordinate pickups, understand current airport conditions, and communicate clearly when plans change.</p>
+        <div class="hero-actions">
+          <a class="button button-primary" href="#product">Explore the product</a>
+          <a class="button button-secondary" href="#policy">Read the policy angle</a>
+        </div>
+        <dl class="hero-facts">
+          <div>
+            <dt>Platform</dt>
+            <dd>Native iOS</dd>
+          </div>
+          <div>
+            <dt>Data</dt>
+            <dd>Live, sourced</dd>
+          </div>
+          <div>
+            <dt>Focus</dt>
+            <dd>Passenger policy</dd>
+          </div>
+        </dl>
+      </div>
+      <div class="hero-phone" aria-label="AeroSync app running on an iPhone simulator">
+        <img src="assets/aerosync-home.png" alt="AeroSync iOS home screen showing the logo, product mission, and connection risk feature">
+      </div>
+    </section>
+
+    <section class="intro band" id="product">
+      <div class="section-heading">
+        <p class="eyebrow dark">The product</p>
+        <h2>One trip. Fewer information gaps.</h2>
+      </div>
+      <div class="intro-grid">
+        <p class="intro-lede">Air travel information is often scattered across airline apps, airport pages, weather products, family text threads, and terminal signage. AeroSync brings the planning decisions into one clear workflow.</p>
+        <p>AeroSync does not pretend to be an airline or government system. It labels sources, distinguishes live observations from planning estimates, and keeps the user focused on the next practical action.</p>
+      </div>
+    </section>
+
+    <section class="feature-band">
+      <div class="feature-grid">
+        <article class="feature">
+          <span class="feature-number">01</span>
+          <h3>Connection Risk</h3>
+          <p>Scores layovers using time, airport complexity, terminal transfers, baggage, traveler needs, and current operating conditions.</p>
+        </article>
+        <article class="feature">
+          <span class="feature-number">02</span>
+          <h3>Pickup Coordination</h3>
+          <p>Builds a practical plan for when to leave, where to wait, and what family members should communicate before entering airport traffic.</p>
+        </article>
+        <article class="feature">
+          <span class="feature-number">03</span>
+          <h3>International Context</h3>
+          <p>Supports major global hubs, international connection buffers, optional location context, and airport map views.</p>
+        </article>
+        <article class="feature">
+          <span class="feature-number">04</span>
+          <h3>Smart Travel Packet</h3>
+          <p>Turns trip details, risk results, pickup instructions, and backup steps into a shareable travel packet.</p>
+        </article>
+        <article class="feature">
+          <span class="feature-number">05</span>
+          <h3>Airline Markets</h3>
+          <p>Tracks public airline stocks in a separate research view with clearly labeled market-data timing and financial disclaimers.</p>
+        </article>
+        <article class="feature">
+          <span class="feature-number">06</span>
+          <h3>Local-First Profile</h3>
+          <p>Keeps the MVP lightweight with local trip preferences, saved plans, and no required AeroSync account.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="data-band band" id="data">
+      <div class="section-heading">
+        <p class="eyebrow light">Live data architecture</p>
+        <h2>Real information, with honest boundaries.</h2>
+      </div>
+      <div class="data-layout">
+        <div class="data-principles">
+          <div class="data-row">
+            <span>Automatic</span>
+            <div>
+              <h3>Current airport conditions</h3>
+              <p>Official Aviation Weather Center METAR reports refresh while relevant app screens are open. No API key is required.</p>
+            </div>
+          </div>
+          <div class="data-row">
+            <span>Optional</span>
+            <div>
+              <h3>Flight-specific details</h3>
+              <p>An authorized aviation provider can add exact flight status, estimated arrival, terminal, gate, and baggage information when available.</p>
+            </div>
+          </div>
+          <div class="data-row">
+            <span>Explicit</span>
+            <div>
+              <h3>No fabricated operations data</h3>
+              <p>If an operational source is unavailable, AeroSync says so. Planning estimates are never presented as official airline status.</p>
+            </div>
+          </div>
+        </div>
+        <aside class="data-note">
+          <p class="note-label">Prototype standard</p>
+          <p>Every operational view should answer three questions:</p>
+          <ol>
+            <li>Where did this information come from?</li>
+            <li>When was it last updated?</li>
+            <li>What should the traveler do next?</li>
+          </ol>
+        </aside>
+      </div>
+    </section>
+
+    <section class="policy-band band" id="policy">
+      <div class="policy-heading">
+        <p class="eyebrow dark">Aviation policy capstone</p>
+        <h2>The Passenger Disruption Communication Standard</h2>
+        <p>AeroSync is more than a travel utility. It is a civic-technology prototype for studying how airlines, airports, and digital tools communicate during delays, missed connections, accessibility situations, baggage waits, and curbside pickups.</p>
+      </div>
+      <div class="policy-grid">
+        <article>
+          <h3>Source transparency</h3>
+          <p>Consumer tools should distinguish official status, live observations, provider estimates, and app-generated recommendations.</p>
+        </article>
+        <article>
+          <h3>Actionable communication</h3>
+          <p>Disruption messages should explain the passenger’s next step, not only state that a delay or change occurred.</p>
+        </article>
+        <article>
+          <h3>Accessible by design</h3>
+          <p>Timing and terminal guidance should account for mobility assistance, language clarity, family travel, and unfamiliar airports.</p>
+        </article>
+        <article>
+          <h3>Better curbside policy</h3>
+          <p>Ready-to-pick-up confirmation and cell phone lot guidance can reduce terminal congestion, circling, and family confusion.</p>
+        </article>
+      </div>
+      <blockquote>
+        “How can aviation institutions communicate disruption information in a way that is timely, trustworthy, accessible, and useful enough to change passenger behavior?”
+      </blockquote>
+    </section>
+
+    <section class="build-band band">
+      <div class="section-heading">
+        <p class="eyebrow dark">Built natively</p>
+        <h2>From policy question to working iOS prototype.</h2>
+      </div>
+      <div class="build-list" aria-label="AeroSync technology">
+        <span>Swift</span>
+        <span>SwiftUI</span>
+        <span>CoreLocation</span>
+        <span>MapKit</span>
+        <span>URLSession</span>
+        <span>Local persistence</span>
+        <span>PDF generation</span>
+        <span>Responsive live data</span>
+      </div>
+    </section>
+
+    <section class="founder-band" id="founder">
+      <div class="founder-copy">
+        <p class="eyebrow light">Founder</p>
+        <h2>Adhvaith Ananth</h2>
+        <p class="founder-role">Founder &amp; CEO, AeroSync</p>
+        <p>Adhvaith is a Texas Academy of Mathematics and Science student exploring the intersection of aerospace engineering, aviation systems, public policy, and civic technology. He created AeroSync to turn a passenger communication policy question into a functioning native iOS product.</p>
+      </div>
+      <div class="founder-statement">
+        <p>“The strongest aviation systems do more than move aircraft efficiently. They help people understand what is happening and what to do next.”</p>
+      </div>
+    </section>
+
+    <section class="status-band band">
+      <div>
+        <p class="eyebrow dark">Project status</p>
+        <h2>Working prototype. Active development.</h2>
+      </div>
+      <p>AeroSync currently runs as a native iOS prototype and is being developed as a student venture and aviation policy capstone. Public distribution will require final provider licensing, privacy review, secure production authentication, and App Store review.</p>
+    </section>
+  </main>
+
+  <footer>
+    <div class="footer-brand">
+      <img src="assets/aerosync-icon.png" alt="">
+      <span>AeroSync</span>
+    </div>
+    <p>Student-founded aviation technology by Adhvaith Ananth.</p>
+    <p class="legal">AeroSync is an independent planning prototype. It is not affiliated with or endorsed by any airline, airport, or government agency.</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
