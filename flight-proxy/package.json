@@ -1,0 +1,13 @@
+{
+  "name": "aerosync-flight-proxy",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Server-side live aviation data proxy for AeroSync.",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

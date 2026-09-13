@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: aerosync-flight-proxy
+    env: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: AIRLABS_API_KEY
+        sync: false
