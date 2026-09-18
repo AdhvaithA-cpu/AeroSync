@@ -1,5 +1,6 @@
 import http from "node:http";
-import { URL } from "node:url";
+import { URL, pathToFileURL } from "node:url";
+import { publicFlightResult } from "./provider-response.js";
 
 const airLabsApiKey = process.env.AIRLABS_API_KEY?.trim();
 const port = Number(process.env.PORT || 8080);
@@ -40,7 +41,7 @@ const policyBrief = {
     "Trip Planner maps the communication standard into trip fields.",
     "Connection Risk tests layover timing, airport complexity, terminal movement, baggage, and passenger needs.",
     "Pickup Mode tests curbside and family coordination policy.",
-    "AI Concierge provides scripts and official-source links while preserving disclaimers.",
+    "CivicRunway provides policy context and official-source links while preserving disclaimers.",
     "Smart Travel Packet exports the policy-aware trip plan."
   ],
   disclaimer: "This endpoint supports student policy research and product demos. It is not legal advice or official airline, airport, TSA, DOT, FAA, CBP, or government guidance."
@@ -243,8 +244,10 @@ async function handleRequest(request, response) {
       return;
     }
 
-    const result = await fetchAirLabs("flight", { flight_iata: flightIATA });
-    sendJSON(response, result.status >= 200 && result.status < 300 ? 200 : 502, result.body);
+    const result = publicFlightResult(
+      await fetchAirLabs("flight", { flight_iata: flightIATA }), airLabsApiKey
+    );
+    sendJSON(response, result.status, result.body);
     return;
   }
 
@@ -288,20 +291,22 @@ async function handleRequest(request, response) {
   });
 }
 
-const server = http.createServer((request, response) => {
-  handleRequest(request, response).catch((error) => {
+export const server = http.createServer((request, response) => {
+  handleRequest(request, response).catch(() => {
     sendJSON(response, 500, {
       error: {
         code: "server_error",
-        message: error instanceof Error ? error.message : "Unknown server error."
+        message: "The request could not be completed."
       }
     });
   });
 });
 
-server.listen(port, () => {
-  console.log(`AeroSync flight proxy listening on port ${port}`);
-});
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
+  server.listen(port, () => {
+    console.log(`AeroSync flight proxy listening on port ${port}`);
+  });
+}
 
 setInterval(() => {
   const now = Date.now();

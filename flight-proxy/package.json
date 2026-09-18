@@ -5,7 +5,8 @@
   "description": "Server-side live aviation data proxy for AeroSync.",
   "type": "module",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "test": "node --test"
   },
   "engines": {
     "node": ">=18"
