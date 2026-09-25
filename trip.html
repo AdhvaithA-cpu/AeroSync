@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="referrer" content="no-referrer"><title>Shared flight · AeroSync</title>
+<style>body{margin:0;background:#f2f7f8;color:#11333b;font:17px/1.6 system-ui,sans-serif}main{max-width:620px;margin:5vh auto;padding:28px}article{background:white;border-radius:24px;padding:28px;box-shadow:0 15px 60px #143c4710}h1{font-size:36px;line-height:1.15;margin:10px 0 24px}h2{font-size:22px}.eyebrow{font-weight:700;color:#246c79}a,button{font:inherit}a.button,button{display:block;box-sizing:border-box;width:100%;text-align:center;padding:14px;border-radius:12px;border:1px solid #006575;background:#006575;color:white;text-decoration:none;margin:12px 0;cursor:pointer}.secondary{background:white!important;color:#006575!important}small{display:block;color:#53696e}dl{display:grid;grid-template-columns:auto 1fr;gap:8px 16px}dt{color:#53696e}dd{margin:0}#message{color:#53696e}footer{margin-top:24px;font-size:14px}a{color:#006575} [hidden]{display:none!important}</style></head>
+<body><main><p class="eyebrow">AeroSync · iPhone & iPad</p><article><h1>Your shared flight</h1><p id="message">Reading shared flight…</p><section id="flight" hidden><h2 id="route"></h2><dl><dt>Flight</dt><dd id="number"></dd><dt>Departs</dt><dd id="departure"></dd><dt>Arrives</dt><dd id="arrival"></dd><dt>Checked bag</dt><dd id="bag"></dd></dl><small>Shared schedule snapshot. Confirm current flight status with the airline.</small><a class="button" id="open">Open in AeroSync</a><button class="secondary" id="copy">Copy flight link</button><small>Already installed? Open the app above. If it doesn’t open, paste this link into Pickup → Import Shared Flight. Requires build 3 or later.</small></section>
+<h2>Need AeroSync?</h2><a class="button" id="download" hidden>Get AeroSync for iPhone or iPad</a><p id="beta">AeroSync is currently in private TestFlight testing. Ask the person who sent this flight for a beta invitation, then install TestFlight on your iPhone or iPad and return to this link.</p><small id="privacy">Anyone with this link can read its flight details. The details are stored in the link, not uploaded to an AeroSync trip database. Downloading the app does not automatically import the flight; return here after installing.</small></article><footer><a href="support.html">Support</a> · <a href="privacy.html">Privacy</a></footer></main>
+<script>
+// Set only after a real public TestFlight or App Store URL is available.
+const PUBLIC_DOWNLOAD_URL = null;
+if (PUBLIC_DOWNLOAD_URL) { const d=document.getElementById('download');d.href=PUBLIC_DOWNLOAD_URL;d.hidden=false;document.getElementById('beta').hidden=true; }
+const message=document.getElementById('message');
+function renderFlight() {
+document.getElementById('flight').hidden=true;message.hidden=false;
+try {
+ const params=new URLSearchParams(location.hash.slice(1));const encoded=params.get('data');
+ if(!encoded||location.hash.length>12000||[...params].length!==1)throw Error();
+ const p=JSON.parse(new TextDecoder().decode(Uint8Array.from(atob(encoded.replaceAll("-","+").replaceAll("_","/")),c=>c.charCodeAt(0))));
+ const dep=new Date(p.departureTime),arr=new Date(p.arrivalTime);
+ if(p.version!==1||typeof p.airline!=='string'||p.airline.length>100||typeof p.checkedBag!=='boolean'||typeof p.flight!=='string'||!(/^[a-z0-9]{3,12}$/i).test(p.flight)||!(/^[a-z]{3}$/i).test(p.departure)||!(/^[a-z]{3}$/i).test(p.arrival)||p.departure.toUpperCase()===p.arrival.toUpperCase()||!Number.isFinite(+dep)||!Number.isFinite(+arr)||arr<=dep||arr-dep>=172800000)throw Error();
+ const zones={DFW:'America/Chicago',LGA:'America/New_York',JFK:'America/New_York',ATL:'America/New_York',ORD:'America/Chicago',DEN:'America/Denver',LAX:'America/Los_Angeles',SFO:'America/Los_Angeles',OGG:'Pacific/Honolulu',LHR:'Europe/London',DEL:'Asia/Kolkata',BOM:'Asia/Kolkata'};
+ const format=(date,code)=>new Intl.DateTimeFormat(undefined,{dateStyle:'medium',timeStyle:'short',timeZone:zones[code.toUpperCase()]||'UTC'}).format(date)+' ('+(zones[code.toUpperCase()]||'UTC; airport zone unavailable')+')';
+ document.getElementById('route').textContent=p.departure.toUpperCase()+' → '+p.arrival.toUpperCase();
+ document.getElementById('number').textContent=p.flight.toUpperCase();document.getElementById('departure').textContent=format(dep,p.departure);document.getElementById('arrival').textContent=format(arr,p.arrival);document.getElementById('bag').textContent=p.checkedBag?'Yes':'No';
+ document.getElementById('open').href='aerosync://trip?'+new URLSearchParams({data:encoded});
+ document.getElementById('flight').hidden=false;message.hidden=true;
+ document.getElementById('copy').onclick=async()=>{try{await navigator.clipboard.writeText(location.href);document.getElementById('copy').textContent='Copied';}catch{message.textContent='Copy the link from your browser address bar.';message.hidden=false;}};
+}catch{message.textContent='This flight link is incomplete or invalid. Ask the traveler to share it again.';}
+}
+renderFlight();
+window.addEventListener('hashchange',renderFlight);
+</script></body></html>
