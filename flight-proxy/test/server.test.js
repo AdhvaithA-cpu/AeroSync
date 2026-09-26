@@ -33,6 +33,19 @@ test("HTTP routes preserve flight search and never return the provider key", asy
     });
   }
 
+  const chat = await new Promise((resolve, reject) => {
+    const request = http.request({ hostname: "127.0.0.1", port, path: "/api/concierge", method: "POST", headers: {"Content-Type":"application/json"} }, response => {
+      let text = "";
+      response.on("data", chunk => { text += chunk; });
+      response.on("end", () => resolve({status:response.statusCode, body:JSON.parse(text)}));
+    });
+    request.on("error", reject);
+    request.end(JSON.stringify({message:"Where is my gate?",trip:{departureAirport:"DFW"}}));
+  });
+  assert.equal(chat.status,200);
+  assert.equal(chat.body.mode,"guidance");
+  assert.equal(calls,0);
+
   const bad = await get("/api/flight?flight_iata=INVALID");
   assert.equal(bad.status, 400);
   assert.equal(calls, 0);

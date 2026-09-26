@@ -81,3 +81,7 @@ For public accounts, do not rely on the preflight endpoint alone. Add:
 `GET /api/policy/brief` serves the policy module based on Adhvaith Ananth's 2026 fellowship brief, "Improving Passenger Communication and Airport Security in U.S. Aviation."
 
 Use it later if you want the iOS app or portfolio site to pull the policy module from the backend instead of relying only on bundled app copy. The current endpoint is static and safe for demos. If you later add editing or publishing tools, protect them with admin authentication.
+
+## Concierge update
+
+POST /api/concierge accepts message, history and optional minimal trip context. By default it returns labeled prepared guidance. Enable AI with CONCIERGE_AI_ENABLED=true, OPENAI_API_KEY and OPENAI_MODEL on the server only. npm test exercises privacy, provider failures and quotas. Debug iOS simulators use port 8089 for concierge. On Render, use root directory flight-proxy, npm install and npm start. The in-memory beta limits must be replaced with authenticated persistent quotas before public paid AI rollout.

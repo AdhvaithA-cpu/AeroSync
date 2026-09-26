@@ -1,4 +1,6 @@
 import http from "node:http";
+import { replyToChat, createChatLimiter } from "./concierge.js";
+const chatAllowed = createChatLimiter();
 import { URL, pathToFileURL } from "node:url";
 import { publicFlightResult } from "./provider-response.js";
 
@@ -179,6 +181,21 @@ async function handleRequest(request, response) {
   }
 
   const url = new URL(request.url, `http://${request.headers.host || "localhost"}`);
+
+  if (request.method === "POST" && url.pathname === "/api/concierge") {
+    const ip = String(request.headers["x-forwarded-for"] || request.socket.remoteAddress || "unknown").split(",")[0].trim();
+    if (!chatAllowed(ip)) {
+      sendJSON(response, 429, { error: { message: "Concierge has reached its beta limit. Please try again later." } });
+      return;
+    }
+    try {
+      const body = await readJSON(request);
+      sendJSON(response, 200, await replyToChat(body));
+    } catch {
+      sendJSON(response, 400, { error: { message: "Enter a question of up to 2,000 characters." } });
+    }
+    return;
+  }
 
   if (request.method === "GET" && url.pathname === "/api/features") {
     sendJSON(response, 200, {
