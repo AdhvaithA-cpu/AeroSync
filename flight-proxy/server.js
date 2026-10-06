@@ -1,5 +1,3 @@
-import { createFutureSchedules } from "./future-schedules.js";
-const futureSchedules = createFutureSchedules();
 import http from "node:http";
 import { replyToChat, createChatLimiter } from "./concierge.js";
 const chatAllowed = createChatLimiter();
@@ -248,13 +246,6 @@ async function handleRequest(request, response) {
       provider: "AirLabs",
       message: ok ? "AeroSync backend is ready." : "AirLabs did not verify this backend key."
     });
-    return;
-  }
-
-  if (request.method === "GET" && url.pathname === "/api/future-schedules") {
-    const result = await futureSchedules({ flight: normalizedFlight(url.searchParams.get("flight_iata")),
-      airport: (url.searchParams.get("dep_iata") || "").trim().toUpperCase(), date: url.searchParams.get("date") });
-    sendJSON(response, result.status, result.body);
     return;
   }
 

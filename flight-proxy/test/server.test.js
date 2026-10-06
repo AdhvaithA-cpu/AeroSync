@@ -4,7 +4,6 @@ import http from "node:http";
 import { once } from "node:events";
 
 // A fake credential is used only for offline regression tests.
-delete process.env.AVIATIONSTACK_API_KEY;
 process.env.AIRLABS_API_KEY = "TEST-ONLY-NOT-A-REAL-KEY";
 const { server } = await import("../server.js");
 
@@ -47,11 +46,6 @@ test("HTTP routes preserve flight search and never return the provider key", asy
   assert.equal(chat.body.mode,"guidance");
   assert.equal(calls,0);
 
-  const tomorrow = new Date(Date.now()+86400000).toISOString().slice(0,10);
-  const future = await get(`/api/future-schedules?flight_iata=AA2925&dep_iata=DFW&date=${tomorrow}`);
-  assert.equal(future.status,503);
-  assert.equal(future.body.error.code,"future_not_configured");
-  assert.equal(calls,0);
   const bad = await get("/api/flight?flight_iata=INVALID");
   assert.equal(bad.status, 400);
   assert.equal(calls, 0);
