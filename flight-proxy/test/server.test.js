@@ -53,6 +53,21 @@ test("HTTP routes preserve flight search and never return the provider key", asy
   assert.equal(flight.status, 200);
   assert.deepEqual(flight.body, { response: { flight_iata: "AA123", status: "active", arr_gate: "C2" } });
   assert.ok(!flight.text.includes(process.env.AIRLABS_API_KEY));
+  const badSchedule = await get("/api/schedules?flight_iata=INVALID");
+  assert.equal(badSchedule.status, 400);
+  t.mock.method(globalThis, "fetch", async url => {
+    calls += 1;
+    assert.equal(url.pathname, "/api/v9/schedules");
+    assert.equal(url.searchParams.get("flight_iata"), "AA123");
+    return {status:200,json:async()=>({response:[{flight_iata:"AA123",dep_time_utc:"2026-10-06 11:00"}]})};
+  });
+  const schedule = await get("/api/schedules?flight_iata=AA123");
+  assert.equal(schedule.body.response.length,1);
+  assert.equal(schedule.body.response[0].dep_time_utc,"2026-10-06 11:00");
+  t.mock.method(globalThis, "fetch", async () => {
+    calls += 1;
+    return {status:200,json:async()=>({response:{}})};
+  });
   const health = await get("/api/health");
   assert.equal(health.body.ok, true);
   assert.ok(!health.text.includes(process.env.AIRLABS_API_KEY));
@@ -66,6 +81,9 @@ test("HTTP routes preserve flight search and never return the provider key", asy
   t.mock.method(globalThis, "fetch", async () => ({ status: 200, json: async () => ({
     error: { message: process.env.AIRLABS_API_KEY }
   }) }));
+  const scheduleFailure = await get("/api/schedules?flight_iata=AA123");
+  assert.equal(scheduleFailure.status, 502);
+  assert.ok(!scheduleFailure.text.includes(process.env.AIRLABS_API_KEY));
   const failure = await get("/api/flight?flight_iata=AA123");
   assert.equal(failure.status, 502);
   assert.ok(!failure.text.includes(process.env.AIRLABS_API_KEY));

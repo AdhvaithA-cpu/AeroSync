@@ -2,7 +2,7 @@ import http from "node:http";
 import { replyToChat, createChatLimiter } from "./concierge.js";
 const chatAllowed = createChatLimiter();
 import { URL, pathToFileURL } from "node:url";
-import { publicFlightResult } from "./provider-response.js";
+import { publicFlightResult, publicSchedulesResult } from "./provider-response.js";
 
 const airLabsApiKey = process.env.AIRLABS_API_KEY?.trim();
 const port = Number(process.env.PORT || 8080);
@@ -246,6 +246,19 @@ async function handleRequest(request, response) {
       provider: "AirLabs",
       message: ok ? "AeroSync backend is ready." : "AirLabs did not verify this backend key."
     });
+    return;
+  }
+
+  if (request.method === "GET" && url.pathname === "/api/schedules") {
+    const flightIATA = normalizedFlight(url.searchParams.get("flight_iata"));
+    if (!flightIATA) {
+      sendJSON(response, 400, { error: { code: "bad_flight_number", message: "Enter a valid flight number." } });
+      return;
+    }
+    const result = publicSchedulesResult(
+      await fetchAirLabs("schedules", { flight_iata: flightIATA, limit: "50" }), airLabsApiKey
+    );
+    sendJSON(response, result.status, result.body);
     return;
   }
 

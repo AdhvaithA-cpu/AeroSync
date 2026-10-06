@@ -2,7 +2,7 @@
 // request/account metadata, arbitrary error messages, or new upstream fields.
 const stringFields = [
   "flight_iata", "airline_name", "status", "dep_iata", "arr_iata",
-  "dep_time_utc", "dep_estimated_utc", "dep_actual_utc",
+  "dep_time", "arr_time", "dep_time_utc", "dep_estimated_utc", "dep_actual_utc",
   "arr_time_utc", "arr_estimated_utc", "arr_actual_utc",
   "arr_terminal", "arr_gate", "arr_baggage"
 ];
@@ -36,4 +36,14 @@ export function publicFlightResult(result, apiKey) {
     if (Number.isFinite(flight[field])) response[field] = flight[field];
   }
   return { status: 200, body: { response } };
+}
+
+export function publicSchedulesResult(result, apiKey) {
+  if (result.status < 200 || result.status >= 300 || result.body?.error) {
+    return publicFlightResult(result, apiKey);
+  }
+  const flights = Array.isArray(result.body?.response) ? result.body.response : [];
+  return { status: 200, body: { response: flights.slice(0, 50).map(flight =>
+    publicFlightResult({ status: 200, body: { response: flight } }, apiKey).body.response
+  ).filter(Boolean) } };
 }

@@ -55,3 +55,20 @@ test("rejects a URL-encoded credential within a flight field", () => {
   } } }, key);
   assert.deepEqual(result.body, { response: {} });
 });
+
+
+test("schedule arrays preserve multiple occurrences and strip credentials", async () => {
+  const { publicSchedulesResult } = await import("../provider-response.js");
+  const key = "secret-test-key";
+  const result = publicSchedulesResult({ status: 200, body: {
+    request: { key }, response: [
+      { flight_iata: "AA2925", dep_time_utc: "2026-10-06 11:00", arr_gate: key, unknown: key },
+      { flight_iata: "AA2925", dep_time_utc: "2026-10-06 21:00" }, null
+    ]
+  } }, key);
+  assert.equal(result.body.response.length, 2);
+  assert.equal(result.body.response[1].dep_time_utc, "2026-10-06 21:00");
+  assert.ok(!JSON.stringify(result).includes(key));
+  assert.equal(publicSchedulesResult({status:200,body:{error:{message:key}}},key).status,502);
+  assert.deepEqual(publicSchedulesResult({status:200,body:{response:null}},key).body.response,[]);
+});
