@@ -752,3 +752,13 @@ footer p {
     scroll-behavior: auto;
   }
 }
+
+/* Policy source documents */
+.policy-documents { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; margin-top: 36px; }
+.policy-document { padding: 28px; background: #fffaf8; border: 1px solid #e3bdb4; border-radius: 12px; }
+.policy-document h3 { margin: 0 0 16px; line-height: 1.35; font-size: 1.3rem; }
+.policy-document > p:not(.eyebrow), .policy-context { color: #5f5960; line-height: 1.7; }
+.policy-document a { display: inline-block; margin-top: 12px; color: #7c2d26; font-weight: 750; text-underline-offset: 4px; }
+.policy-document a:focus-visible { outline: 3px solid #7c2d26; outline-offset: 5px; }
+.policy-context { max-width: 950px; margin-top: 28px; font-size: .9rem; }
+@media (max-width: 700px) { .policy-documents { grid-template-columns: 1fr; } }
